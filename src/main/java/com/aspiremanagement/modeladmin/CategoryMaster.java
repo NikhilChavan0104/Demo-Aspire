@@ -70,7 +70,7 @@ public class CategoryMaster {
 	}
 
 	public void setCategoryName(String categoryName) {
-		this.categoryName = categoryName;
+		this.categoryName = categoryName;  
 	}
 
 	public Date getUpdatedDate() {

@@ -28,11 +28,13 @@ public enum Constants {
 	 UNAUTHORIZED("401"),
 	 UPLOADCATEGORYIMAGEDIRECTORY(System.getProperty("user.dir") + "/uploads/admin/images/categoryImages/"),
 	 UPLOADITEMSIMAGEDIRECTORY(System.getProperty("user.dir") + "/uploads/admin/images/ItemsImages/"),
-	 UPLOADPROFILEIMAGEDIRECTORY(System.getProperty("user.dir") + "/uploads/admin/images/profile/")
+	 UPLOADPROFILEIMAGEDIRECTORY(System.getProperty("user.dir") + "/uploads/admin/images/profile/"),
+	
+	 ADMIN_EMAIL("nikhilchavan9877@gmail.com"),
+	 ADMIN_PASSWORD("ohmkyyzooyfzzshr"),
+	 ECOMMERCE_JWTSECRET("AVQ4XgHTIKVV2h27nCBkTGb7NK3QEghlB1sYYoNlXsEzKTv8YAXWdBp6cH4ycfcjbftIHGYS73846XHJGDHSGFYIUg"),
+	 ECOMMERCE_JWTEXPIRATIONMS("86400000");
 	 
-	
-	
-	;
 	final public String constant;
 
 	private Constants(String constant) {

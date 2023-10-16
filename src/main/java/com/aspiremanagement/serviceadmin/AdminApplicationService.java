@@ -32,21 +32,16 @@ public class AdminApplicationService {
 	@Autowired
 	AdminApplicationRepository adminApplicationRepository;
 
-	@Value("${admin.email}")
-	  private String fromEmail;
+	//@Value("${admin.email}")
+	  private String fromEmail=Constants.ADMIN_EMAIL.constant;
 	
-	@Value("${admin.password}")
-	  private String fromPassword;
-	
-	
+	//@Value("${admin.password}")
+	  private String fromPassword=Constants.ADMIN_PASSWORD.constant;
 	public Admin fetchByEmailId(String email) {
-		
 		return adminApplicationRepository.fetchByEmailId(email);
 	}
-
-	public void saveUser(Admin user) {
-		adminApplicationRepository.save(user);
-		
+    public void saveUser(Admin user) {
+		adminApplicationRepository.save(user);	
 	}
 	public boolean sendEmail(String subject,String message,String to)
 	{
@@ -68,7 +63,7 @@ public class AdminApplicationService {
 			@Override
 			protected PasswordAuthentication getPasswordAuthentication() {
 				return new PasswordAuthentication(fromEmail, fromPassword);
-			}
+			} 
 			
 			
 		});

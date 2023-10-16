@@ -199,45 +199,6 @@ public class AdminApplicationController {
 	}
 	
 
-	@RequestMapping(value = "/change-admin-password", method = RequestMethod.POST)
-	@ResponseBody
-	public JsonResponse changeAdminPassword( HttpSession session, RedirectAttributes redirectAttributes,
-			HttpServletRequest request, @RequestParam("newPass") String newPass) {
-
-		Object email = session.getAttribute("adminEmail");
-		Object checkToken = session.getAttribute("adminJwtToken");
-		JsonResponse resp = new JsonResponse();
-		try {
-			if (checkToken != null) {
-				if (jwtUtils.validateJwtToken(request.getHeader(Constants.AUTHORIZATION.constant))) {
-
-					Admin user = adminApplicationService.fetchByEmailId(email.toString());
-					BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
-					user.setPassword(bCryptPasswordEncoder.encode(newPass));
-
-					adminApplicationService.saveUser(user);
-
-					resp.setStatusCode(Constants.SUCCESS.constant);
-					resp.setMessage("Password Change Successfully...");
-
-				} else {
-					resp.setStatusCode(Constants.INVALID_TOKEN.constant);
-					resp.setMessage(Constants.INVALID_TOKEN_MESSAGE.constant);
-				}
-			} else {
-				resp.setStatusCode(Constants.SESSION_EXPIRED.constant);
-				resp.setMessage(Constants.SESSION_EXPIRED_MESSAGE.constant);
-			}
-		} catch (
-
-		Exception exception) {
-			redirectAttributes.addFlashAttribute("message", "Error:" + exception.getMessage());
-
-			exception.printStackTrace();
-		}
-		redirectAttributes.addFlashAttribute("message", Constants.INVALID_CREADINTIALS.constant);
-		return resp;
-	}
 
 	@RequestMapping(value = "/check-old-password", method = RequestMethod.POST)
 	@ResponseBody
@@ -281,27 +242,46 @@ public class AdminApplicationController {
 		return jsonResponse;
 	}
 
-	@RequestMapping("/logout")
-	public JsonResponse logout(HttpSession session) {
+
+	@RequestMapping(value = "/change-admin-password", method = RequestMethod.POST)
+	@ResponseBody
+	public JsonResponse changeAdminPassword( HttpSession session, RedirectAttributes redirectAttributes,
+			HttpServletRequest request, @RequestParam("newPass") String newPass) {
+
+		Object email = session.getAttribute("adminEmail");
 		Object checkToken = session.getAttribute("adminJwtToken");
-		JsonResponse jsonResponse = new JsonResponse();
-		if (checkToken != null) {
-			session.setAttribute("sign-in-user", null);
-			session.invalidate();
-			jsonResponse.setStatusCode(Constants.SUCCESS.constant);
-			jsonResponse.setResult("Logout Successful");
-			jsonResponse.setMessage("Admin Logout Successfully !!!");
-			return jsonResponse;
-		} else {
+		JsonResponse resp = new JsonResponse();
+		try {
+			if (checkToken != null) {
+				if (jwtUtils.validateJwtToken(request.getHeader(Constants.AUTHORIZATION.constant))) {
 
-			jsonResponse.setStatusCode(Constants.SESSION_EXPIRED.constant);
-			jsonResponse.setResult("Fail Logout");
-			jsonResponse.setMessage(Constants.SESSION_EXPIRED_MESSAGE.constant);
-			return jsonResponse;
+					Admin user = adminApplicationService.fetchByEmailId(email.toString());
+					BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
+					user.setPassword(bCryptPasswordEncoder.encode(newPass));
+
+					adminApplicationService.saveUser(user);
+
+					resp.setStatusCode(Constants.SUCCESS.constant);
+					resp.setMessage("Password Change Successfully...");
+
+				} else {
+					resp.setStatusCode(Constants.INVALID_TOKEN.constant);
+					resp.setMessage(Constants.INVALID_TOKEN_MESSAGE.constant);
+				}
+			} else {
+				resp.setStatusCode(Constants.SESSION_EXPIRED.constant);
+				resp.setMessage(Constants.SESSION_EXPIRED_MESSAGE.constant);
+			}
+		} catch (
+
+		Exception exception) {
+			redirectAttributes.addFlashAttribute("message", "Error:" + exception.getMessage());
+
+			exception.printStackTrace();
 		}
-
+		redirectAttributes.addFlashAttribute("message", Constants.INVALID_CREADINTIALS.constant);
+		return resp;
 	}
-
 
 
 	@RequestMapping(value = "/send-otp", method = RequestMethod.POST)
@@ -354,7 +334,7 @@ public class AdminApplicationController {
 				jsonResponse.setStatusCode(Constants.SUCCESS.constant);
 				jsonResponse.setResult("Send Otp");
 				jsonResponse.setMessage("Send Otp Successfully on your Resistered emailId !!!");
-			} else {
+	 		} else {
 				jsonResponse.setStatusCode(Constants.BAD_REQUEST.constant);
 				jsonResponse.setResult("Doesn't Send Otp");
 				jsonResponse.setMessage("Something Went Wrong !!!");
@@ -431,6 +411,9 @@ public class AdminApplicationController {
 		return jsonResponse;
 	}
 	
+
+	
+	
 	 @RequestMapping("/get-profile-image/{profileImage}")
 	    public String getAdminProfileImage(@PathVariable("profileImage") String profileImage, HttpServletResponse response,HttpSession session) {
 		 Object checkToken = session.getAttribute("adminJwtToken");
@@ -454,5 +437,26 @@ public class AdminApplicationController {
 //			}
 			return null;
 	 }
+	 @RequestMapping("/logout")
+		public JsonResponse logout(HttpSession session) {
+			Object checkToken = session.getAttribute("adminJwtToken");
+			JsonResponse jsonResponse = new JsonResponse();
+			if (checkToken != null) {
+				session.setAttribute("sign-in-user", null);
+				session.invalidate();
+				jsonResponse.setStatusCode(Constants.SUCCESS.constant);
+				jsonResponse.setResult("Logout Successful");
+				jsonResponse.setMessage("Admin Logout Successfully !!!");
+				return jsonResponse;
+			} else {
+
+				jsonResponse.setStatusCode(Constants.SESSION_EXPIRED.constant);
+				jsonResponse.setResult("Fail Logout");
+				jsonResponse.setMessage(Constants.SESSION_EXPIRED_MESSAGE.constant);
+				return jsonResponse;
+			}
+
+		}
+
 
 }
